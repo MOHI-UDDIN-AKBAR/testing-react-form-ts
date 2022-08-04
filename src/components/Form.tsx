@@ -28,12 +28,11 @@ const Form = () => {
     } else {
       setIsValidPassword(false);
     }
-    if (confirmPassword.length < 5 && confirmPassword !== password) {
+    if (confirmPassword !== password) {
       setIsValidMatching(true);
     } else {
       setIsValidMatching(false);
     }
-    console.log(email, password, confirmPassword);
   };
 
   return (

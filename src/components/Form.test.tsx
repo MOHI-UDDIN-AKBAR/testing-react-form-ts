@@ -57,4 +57,57 @@ describe("ger Error if input is empty after submit", () => {
     const errorTextAgain = screen.queryByText(/in valid email/i);
     expect(errorTextAgain as HTMLElement).toBeInTheDocument();
   });
+  it("get error if email is empty", () => {
+    const emailElement = screen.getByLabelText(/email:/i);
+    const buttonElement = screen.getByRole("button");
+    const errorText = screen.queryByText(/email is empty/i);
+    expect(errorText as HTMLElement).not.toBeInTheDocument();
+    user.type(emailElement, "");
+    user.click(buttonElement);
+    const errorTextAgain = screen.queryByText(/email is empty/i);
+    expect(errorTextAgain as HTMLElement).toBeInTheDocument();
+  });
+  it("get error if password is empty", () => {
+    const emailElement = screen.getByLabelText(/email:/i);
+    user.type(emailElement, "");
+    const passwordElement = screen.getByLabelText("Password:");
+    const errorElement = screen.queryByText(
+      /in valid password. should be at least 5 character/i
+    );
+    const buttonElement = screen.getByRole("button");
+    expect(errorElement).not.toBeInTheDocument();
+    user.type(passwordElement, "");
+    user.click(buttonElement);
+    const errorElementAgain = screen.queryByText(
+      /in valid password. should be at least 5 character/i
+    );
+    expect(errorElementAgain).toBeInTheDocument();
+  });
+  it("if confirm password does not match with upper password", () => {
+    const emailElement = screen.getByLabelText(/email:/i);
+    const passwordElement = screen.getByLabelText("Password:");
+    const confirmPasswordElement = screen.getByLabelText(/confirm-password/i);
+    user.type(emailElement, "");
+    const buttonElement = screen.getByRole("button");
+    const errorElement = screen.queryByText(/in valid Matching/i);
+    expect(errorElement).not.toBeInTheDocument();
+    user.type(passwordElement, "hello");
+    user.type(confirmPasswordElement, "helllo");
+    user.click(buttonElement);
+    const errorElementAgain = screen.queryByText(/in valid Matching/i);
+    expect(errorElementAgain).toBeInTheDocument();
+  });
+  it("if everything is ok then no error message", () => {
+    const emailElement = screen.getByLabelText(/email:/i);
+    const passwordElement = screen.getByLabelText("Password:");
+    const confirmPasswordElement = screen.getByLabelText(/confirm-password/i);
+    const errorElementOne = screen.queryByText(/in valid email/i);
+    const errorElementTwo = screen.queryByText(
+      /in valid password. should be at least 5 character/i
+    );
+    const errorElementThree = screen.queryByText(/in valid Matching/i);
+    expect(errorElementOne).not.toBeInTheDocument();
+    expect(errorElementTwo).not.toBeInTheDocument();
+    expect(errorElementThree).not.toBeInTheDocument();
+  });
 });
